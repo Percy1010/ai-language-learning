@@ -5,7 +5,20 @@ export const runtime = 'edge';
 
 export async function POST(req: NextRequest) {
   try {
-    const { word, apiConfig } = await req.json();
+    // Parse request body
+    let word: string;
+    let apiConfig: any;
+
+    try {
+      const body = await req.json();
+      word = body.word;
+      apiConfig = body.apiConfig;
+    } catch (e) {
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 }
+      );
+    }
 
     if (!apiConfig || !apiConfig.apiKey) {
       return NextResponse.json(
@@ -91,8 +104,13 @@ Make the mnemonic creative and memorable. The image_prompt should be descriptive
     return NextResponse.json(wordData);
 
   } catch (error: any) {
+    // Ensure we always return JSON
+    const errorMessage = error instanceof Error
+      ? error.message
+      : 'Failed to generate word data';
+
     return NextResponse.json(
-      { error: error.message || 'Failed to generate word data' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -5,7 +5,22 @@ export const runtime = 'edge';
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages, word, apiConfig } = await req.json();
+    // Parse request body
+    let messages: any;
+    let word: string;
+    let apiConfig: any;
+
+    try {
+      const body = await req.json();
+      messages = body.messages;
+      word = body.word;
+      apiConfig = body.apiConfig;
+    } catch (e) {
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 }
+      );
+    }
 
     if (!apiConfig || !apiConfig.apiKey) {
       return NextResponse.json(
@@ -55,8 +70,13 @@ Keep responses focused and educational.`;
     return NextResponse.json({ reply });
 
   } catch (error: any) {
+    // Ensure we always return JSON
+    const errorMessage = error instanceof Error
+      ? error.message
+      : 'Failed to get response';
+
     return NextResponse.json(
-      { error: error.message || 'Failed to get response' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
