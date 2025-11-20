@@ -56,7 +56,6 @@ Make the mnemonic creative and memorable. The image_prompt should be descriptive
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('LLM API Error:', errorData);
       return NextResponse.json(
         { error: `API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}` },
         { status: response.status }
@@ -79,8 +78,7 @@ Make the mnemonic creative and memorable. The image_prompt should be descriptive
 
       wordData = JSON.parse(content);
     } catch (e) {
-      // 如果返回的不是标准JSON，尝试提取
-      console.error('Failed to parse LLM response as JSON:', content);
+      // If returned content is not standard JSON
       return NextResponse.json(
         { error: 'Failed to parse AI response. The model may not support JSON output. Please try again or use a different model.' },
         { status: 500 }
@@ -93,7 +91,6 @@ Make the mnemonic creative and memorable. The image_prompt should be descriptive
     return NextResponse.json(wordData);
 
   } catch (error: any) {
-    console.error('Generate word error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to generate word data' },
       { status: 500 }

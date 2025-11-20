@@ -55,7 +55,6 @@ Keep responses focused and educational.`;
     return NextResponse.json({ reply });
 
   } catch (error: any) {
-    console.error('Chat error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to get response' },
       { status: 500 }
