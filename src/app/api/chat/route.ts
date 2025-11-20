@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Required for Cloudflare Pages deployment
+export const runtime = 'edge';
+
 export async function POST(req: NextRequest) {
   try {
     const { messages, word, apiConfig } = await req.json();
